@@ -29,3 +29,17 @@ export const addRoleNameList = (obj) => {
     data: obj
   })
 }
+
+// 删除角色
+export const deleteRoleNameById = (id) => {
+  return axios.delete(`roles/${id}`)
+}
+
+// 编辑角色
+export const editRoleNameList = (id, obj) => {
+  return axios({
+    method: 'put',
+    url: `roles/${id}`,
+    data: obj
+  })
+}

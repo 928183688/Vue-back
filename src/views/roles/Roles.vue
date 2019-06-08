@@ -9,7 +9,7 @@
     <!-- 添加用户按钮 -->
     <el-button type="success" @click="addDialogFormVisible = true">添加角色</el-button>
     <!-- 添加用户弹出框 -->
-    <el-dialog title="收货地址" :visible.sync="addDialogFormVisible">
+    <el-dialog title="添加角色" :visible.sync="addDialogFormVisible">
       <el-form :model="addform" :rules="rules" ref="addform" style="width:400px">
         <el-form-item label="角色名称" :label-width="formLabelWidth" prop="roleName">
           <el-input v-model="addform.roleName" autocomplete="off"></el-input>
@@ -21,6 +21,22 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="addRoleName">确 定</el-button>
+      </div>
+    </el-dialog>
+
+     <!-- 编辑提交框 -->
+     <el-dialog title="收货地址" :visible.sync="editDialogFormVisible">
+      <el-form :model="editform" :rules="rules" ref="editform" style="width:400px">
+        <el-form-item label="角色名称" :label-width="formLabelWidth" prop="roleName">
+          <el-input v-model="editform.roleName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述" :label-width="formLabelWidth" prop="roleDesc">
+          <el-input v-model="editform.roleDesc" autocomplete="off" @keydown.enter.native="editRoleName"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editDialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editRoleNameList">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 表格 -->
@@ -82,13 +98,12 @@
       <el-table-column label="描述" prop="roleDesc"></el-table-column>
       <el-table-column label="操作">
         <!-- 这边是操作按钮 -->
-        <template slot-scope="">
-          社会社会
+        <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
-            <el-button type="success" icon="el-icon-edit"></el-button>
+            <el-button type="success" icon="el-icon-edit" @click='editRoleName(scope.row)'></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-            <el-button type="danger" icon="el-icon-delete"></el-button>
+            <el-button type="danger" icon="el-icon-delete" @click='deleteRoleName(scope.row.id)'></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="授权角色" placement="top-start">
             <el-button type="warning" icon="el-icon-check"></el-button>
@@ -101,10 +116,18 @@
 
 <script>
 import { getRoleName } from '@/api/index.js'
-import { deleteRoleName, addRoleNameList } from '@/api/roles_index.js'
+import { deleteRoleName, addRoleNameList, deleteRoleNameById, editRoleNameList } from '@/api/roles_index.js'
 export default {
   data () {
     return {
+      // 编辑角色
+      editDialogFormVisible: false,
+      editform: {
+        id: '',
+        roleName: '',
+        roleDesc: ''
+      },
+
       // 添加角色
       formLabelWidth: '',
       addDialogFormVisible: false,
@@ -178,6 +201,44 @@ export default {
           this.getAllRoleName()
           this.$refs.addform.resetFields()
           // 没通过不给过
+        } else {
+          return false
+        }
+      })
+    },
+    // 删除角色
+    async deleteRoleName (id) {
+      let result = await deleteRoleNameById(id)
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: result.data.meta.msg
+        })
+        this.getAllRoleName()
+      })
+    },
+    // 编辑角色
+    editRoleName (row) {
+      this.editDialogFormVisible = true
+      this.editform.id = row.id
+      this.editform.roleName = row.roleName
+      this.editform.roleDesc = row.roleDesc
+    },
+    // 编辑提交
+    async editRoleNameList () {
+      let result = await editRoleNameList(this.editform.id, this.editform)
+      this.$refs.editform.validate(valid => {
+        if (valid) {
+          this.editDialogFormVisible = false
+          this.getAllRoleName()
+          this.$message({
+            type: 'success',
+            message: result.data.meta.msg
+          })
         } else {
           return false
         }

@@ -4,12 +4,13 @@
       <el-aside width="200px">
         <img src="../assets/5.jpg" alt class="logo">
         <el-menu
-          :router= true
-          :unique-opened= true
+          :router="true"
+          :unique-opened="true"
           class="el-menu-vertical-demo"
           @open="handleOpen"
           @close="handleClose"
         >
+          <!-- 用户管理 -->
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-user-solid"></i>
@@ -22,7 +23,7 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-
+          <!-- 权限管理 -->
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-setting"></i>
@@ -33,9 +34,56 @@
                 <i class="el-icon-s-custom"></i>
                 <span slot="title">角色列表</span>
               </el-menu-item>
-                  <el-menu-item index="/home/rights">
+              <el-menu-item index="/home/rights">
                 <i class="el-icon-s-tools"></i>
                 <span slot="title">权限列表</span>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <!-- 商品管理 -->
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-suitcase"></i>
+              <span>商品管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index>
+                <i class="el-icon-s-custom"></i>
+                <span slot="title">商品列表</span>
+              </el-menu-item>
+              <el-menu-item index>
+                <i class="el-icon-s-tools"></i>
+                <span slot="title">分类参数</span>
+              </el-menu-item>
+              <el-menu-item index>
+                <i class="el-icon-s-tools"></i>
+                <span slot="title">商品分类</span>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <!-- 订单管理 -->
+          <el-submenu index="4">
+            <template slot="title">
+              <i class="el-icon-notebook-2"></i>
+              <span>订单管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index>
+                <i class="el-icon-notebook-1"></i>
+                <span slot="title">订单列表</span>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+            <!-- 数据统计 -->
+          <el-submenu index="5">
+            <template slot="title">
+              <i class="el-icon-s-data"></i>
+              <span>数据统计</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index>
+                <i class="el-icon-s-data"></i>
+                <span slot="title">数据报表</span>
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
@@ -45,17 +93,16 @@
         <el-header>
           <span class="system-title">电商后台管理系统</span>
           <div class="welcome">
-            <span>欢迎你:admin  </span>
+            <span>欢迎你:admin</span>
             <a href="/login">退出</a>
           </div>
         </el-header>
         <el-main>
-              <router-view></router-view>
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
   </div>
-
 </template>
 
 <script>
