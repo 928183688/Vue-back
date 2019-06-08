@@ -82,7 +82,7 @@
       <el-table-column label="描述" prop="roleDesc"></el-table-column>
       <el-table-column label="操作">
         <!-- 这边是操作按钮 -->
-        <template slot-scope="scope">
+        <template slot-scope="">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
             <el-button type="success" icon="el-icon-edit"></el-button>
           </el-tooltip>
