@@ -83,6 +83,7 @@
       <el-table-column label="操作">
         <!-- 这边是操作按钮 -->
         <template slot-scope="">
+          社会社会
           <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
             <el-button type="success" icon="el-icon-edit"></el-button>
           </el-tooltip>
