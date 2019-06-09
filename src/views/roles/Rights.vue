@@ -45,7 +45,6 @@ export default {
     async getAllRight () {
       let result = await getAllRightList('list')
       this.rightList = result.data.data
-      console.log(result)
     }
   }
 }

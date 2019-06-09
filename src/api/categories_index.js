@@ -16,12 +16,6 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error)
 })
 
-// get方式请求
-export const getAllRightList = (type) => {
-  return axios.get(`rights/${type}`)
-}
-
-// 左侧菜单权限
-export const getAllmenus = () => {
-  return axios.get(`menus`)
+export const getAllcategories = (type) => {
+  return axios.get('categories', type)
 }

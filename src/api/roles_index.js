@@ -43,3 +43,12 @@ export const editRoleNameList = (id, obj) => {
     data: obj
   })
 }
+
+// 角色授权
+export const grantRoleName = (roleId, rids) => {
+  return axios({
+    method: 'post',
+    url: `roles/${roleId}/rights`,
+    data: { rids }
+  })
+}

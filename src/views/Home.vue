@@ -11,81 +11,17 @@
           @close="handleClose"
         >
           <!-- 用户管理 -->
-          <el-submenu index="1">
+          <el-submenu :index="item.id + ''" v-for="item in meusList" :key="item.id">
             <template slot="title">
-              <i class="el-icon-user-solid"></i>
-              <span>用户管理</span>
+              <i class="el-icon-eleme"></i>
+              <span>{{item.authName}}</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/home/user">
-                <i class="el-icon-user"></i>
-                <span slot="title">用户列表</span>
-              </el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <!-- 权限管理 -->
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-setting"></i>
-              <span>权限管理</span>
+              <el-menu-item :index="'/home/'+second.path" v-for="second in item.children" :key="second.id">
+              <template slot="title">
+               <i class="el-icon-platform-eleme"></i>
+                <span>{{second.authName}}</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/home/roles">
-                <i class="el-icon-s-custom"></i>
-                <span slot="title">角色列表</span>
               </el-menu-item>
-              <el-menu-item index="/home/rights">
-                <i class="el-icon-s-tools"></i>
-                <span slot="title">权限列表</span>
-              </el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <!-- 商品管理 -->
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-suitcase"></i>
-              <span>商品管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index>
-                <i class="el-icon-s-custom"></i>
-                <span slot="title">商品列表</span>
-              </el-menu-item>
-              <el-menu-item index>
-                <i class="el-icon-s-tools"></i>
-                <span slot="title">分类参数</span>
-              </el-menu-item>
-              <el-menu-item index>
-                <i class="el-icon-s-tools"></i>
-                <span slot="title">商品分类</span>
-              </el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <!-- 订单管理 -->
-          <el-submenu index="4">
-            <template slot="title">
-              <i class="el-icon-notebook-2"></i>
-              <span>订单管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index>
-                <i class="el-icon-notebook-1"></i>
-                <span slot="title">订单列表</span>
-              </el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-            <!-- 数据统计 -->
-          <el-submenu index="5">
-            <template slot="title">
-              <i class="el-icon-s-data"></i>
-              <span>数据统计</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index>
-                <i class="el-icon-s-data"></i>
-                <span slot="title">数据报表</span>
-              </el-menu-item>
-            </el-menu-item-group>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -106,9 +42,17 @@
 </template>
 
 <script>
+import { getAllmenus } from '@/api/right_index.js'
 export default {
   data () {
-    return {}
+    return {
+      meusList: []
+    }
+  },
+  mounted () {
+    getAllmenus().then(result => {
+      this.meusList = result.data.data
+    })
   },
   methods: {
     handleOpen (key, keyPath) {
