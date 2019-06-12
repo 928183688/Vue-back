@@ -1,30 +1,14 @@
-# vuepc
+Vue后台管理项目
 
-## Project setup
-```
-npm install
-```
+实现登录页面 
+登录状态  后台设置了token状态 登录时必须配置token值  不然无法获取后台的数据
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+实现用户管理页面 
+增删改查 分配角色 调用接口即可
 
-### Compiles and minifies for production
-```
-npm run build
-```
+实现权限管理页面 
+重点在于授权角色  实现授权页面预览 主要在于要获取第三级的权限ID 只要遍历到最底层的ID 在存储起来 点击授权的时候 需要两个ID值 一个是父级ID和权限ID 用map遍历找到PID和ID 然后return PID和ID 存储起来 然后分割成字符串 因为有重复的字符 所以需要转换为数组 在用数组的方法去重 new set 因为new set方法会转换为一个对象 所以在利用Array.from方法 转换为数组  在存储起来  之后传参在转换为字符串 
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-# Vue--
+实现商品管理页面
+商品的信息 -- 添加商品信息 -- 分类四个大块  商品基本信息  商品图片 商品描述 商品参数 
+商品的分类 -- 添加商品分类
