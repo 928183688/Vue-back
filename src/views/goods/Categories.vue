@@ -7,7 +7,7 @@
       <el-breadcrumb-item>商品分类</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 添加分类按钮 -->
-    <el-button type="success" @click="addDialogFormVisible = true">添加分类</el-button>
+    <el-button type="success" @click="showAddGoodList">添加分类</el-button>
     <!-- 添加分类弹出框 -->
     <el-dialog title="分类列表" :visible.sync="addDialogFormVisible">
       <el-form :model="addform">
@@ -15,12 +15,17 @@
           <el-input v-model="addform.cat_name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="父级名称">
-          <el-cascader v-model="addform.cat_pid" :options="options" @change="handleChange"></el-cascader>
+          <el-cascader
+            v-model="selectedOptions"
+            :options="goodData"
+            :props="goodList"
+            @change="handleChange"
+          ></el-cascader>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addDialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addGoodList">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 表格 -->
@@ -54,17 +59,29 @@
 </template>
 
 <script>
-import { getAllcategories } from '@/api/categories_index.js'
+import { getAllcategories, addGoodList } from '@/api/categories_index.js'
 export default {
   data () {
     return {
       // 添加分类
       addDialogFormVisible: false,
+      // 存储的父级ID
+      selectedOptions: [],
+      // 添加分类数据
       addform: {
         cat_name: '',
-        cat_pid: ''
+        cat_pid: '',
+        cat_level: ''
       },
-      // 表格数据
+      // 数据源
+      goodData: [],
+      // 添加分类里面的商品数据
+      goodList: {
+        label: 'cat_name',
+        children: 'children',
+        value: 'cat_id'
+      },
+      // 商品列表表格数据
       cateList: [],
       defaultProps: {
         children: 'children',
@@ -73,14 +90,44 @@ export default {
     }
   },
   mounted () {
-    getAllcategories(1, 2, 3).then(result => {
-      console.log(result)
-      this.cateList = result.data.data
-    })
+    // 调用
+    this.getAllcate()
   },
   methods: {
+    async addGoodList () {
+      if (this.selectedOptions.length === 0) {
+        this.addform.cat_level = 0
+        this.addform.cat_pid = 0
+      } else if (this.selectedOptions.length === 1) {
+        this.addform.cat_level = 1
+        this.addform.cat_pid = this.selectedOptions[0]
+      } else if (this.selectedOptions.length === 2) {
+        this.addform.cat_level = 2
+        this.addform.cat_pid = this.selectedOptions[1]
+      }
+      let result = await addGoodList(this.addform)
+      if (result.data.meta.status === 201) {
+        this.$message({
+          type: 'success',
+          message: result.data.meta.msg
+        })
+        this.addDialogFormVisible = false
+        this.getAllcate()
+      }
+    },
+    // 添加分类获取商品列表
+    async showAddGoodList () {
+      this.addDialogFormVisible = true
+      let result = await getAllcategories(2)
+      this.goodData = result.data.data
+    },
+    // 商品列表
+    async getAllcate () {
+      let result = await getAllcategories(3)
+      this.cateList = result.data.data
+    },
     handleChange (value) {
-      console.log(value)
+      this.addform.cat_pid = value
     }
   }
 }

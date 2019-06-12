@@ -7,9 +7,14 @@ import Welcome from '@/views/Welcome.vue'
 import Users from '@/views/users/Users.vue'
 import Roles from '@/views/roles/Roles.vue'
 import Rights from '@/views/roles/Rights.vue'
-import Goods from '@/views/shop/Goods.vue'
-import Params from '@/views/shop/Params.vue'
-import Categories from '@/views/shop/Categories.vue'
+import Goods from '@/views/goods/Goods.vue'
+import List from '@/views/goods/List.vue'
+import Add from '@/views/goods/Add.vue'
+import Params from '@/views/goods/Params.vue'
+import Categories from '@/views/goods/Categories.vue'
+import Orders from '@/views/list/Orders.vue'
+import Reports from '@/views/reports/Reports.vue'
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -55,7 +60,20 @@ const router = new VueRouter({
         {
           name: 'Goods',
           path: 'goods',
-          component: Goods
+          component: Goods,
+          redirect: { name: 'List' },
+          children: [
+            {
+              name: 'List',
+              path: 'list',
+              component: List
+            },
+            {
+              name: 'Add',
+              path: 'add',
+              component: Add
+            }
+          ]
         },
         {
           name: 'Params',
@@ -63,9 +81,19 @@ const router = new VueRouter({
           component: Params
         },
         {
+          name: 'Orders',
+          path: 'orders',
+          component: Orders
+        },
+        {
           name: 'Categories',
           path: 'categories',
           component: Categories
+        },
+        {
+          name: 'Reports',
+          path: 'reports',
+          component: Reports
         }
       ]
     }
@@ -75,14 +103,10 @@ const router = new VueRouter({
 // 导航守卫
 router.beforeEach((to, from, next) => {
   var token = localStorage.getItem('Login_token')
-  if (token) {
+  if (token || to.path === '/login') {
     next()
   } else {
-    if (to.path !== '/login') {
-      next({ path: '/login' })
-    } else {
-      next()
-    }
+    next({ path: '/login' })
   }
 })
 

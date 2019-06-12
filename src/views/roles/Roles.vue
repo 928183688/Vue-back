@@ -55,7 +55,7 @@
         show-checkbox
         node-key="id"
         default-expand-all
-        :default-checked-keys ="selectedKeys"
+        :default-checked-keys="selectedKeys"
         :props="defaultProps"
         style="height:300px;overflow:auto"
       ></el-tree>
@@ -227,6 +227,7 @@ export default {
       var ids = arr.join(',').split(',')
       // 在为数组去重 然后这个时候是个对象 用Array.from在转换为数组
       var lastId = Array.from(new Set(ids))
+      // 在把数组转换为字符串当参数
       let result = await grantRoleName(this.roleId, lastId.join(','))
       if (result.data.meta.status) {
         this.$message({
@@ -253,20 +254,21 @@ export default {
       row.children = result.data.data
     },
     // 添加角色
-    async addRoleName () {
-      let result = await addRoleNameList(this.addform)
+    addRoleName () {
       // 验证表单
       this.$refs.addform.validate(valid => {
         // 如果通过
         if (valid) {
           // 就显示通过信息并且刷新并且重置表单
-          this.$message({
-            type: 'success',
-            message: result.data.meta.msg
+          addRoleNameList(this.addform).then(result => {
+            this.$message({
+              type: 'success',
+              message: result.data.meta.msg
+            })
+            this.addDialogFormVisible = false
+            this.getAllRoleName()
+            this.$refs.addform.resetFields()
           })
-          this.addDialogFormVisible = false
-          this.getAllRoleName()
-          this.$refs.addform.resetFields()
           // 没通过不给过
         } else {
           return false
@@ -274,18 +276,19 @@ export default {
       })
     },
     // 删除角色
-    async deleteRoleName (id) {
-      let result = await deleteRoleNameById(id)
+    deleteRoleName (id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: result.data.meta.msg
+        deleteRoleNameById(id).then(result => {
+          this.$message({
+            type: 'success',
+            message: result.data.meta.msg
+          })
+          this.getAllRoleName()
         })
-        this.getAllRoleName()
       })
     },
     // 编辑角色
